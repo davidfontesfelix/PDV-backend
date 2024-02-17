@@ -1,0 +1,50 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API PDV",
+    "description": "Api de controle de ponto de venda",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://pdv-backend-psi.vercel.app/",
+      "description": "URL de produção"
+    }
+  ], 
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "exibir todos os users",
+        "tag": ["user"]
+      }
+    },
+    "/register" : {
+      "post": {
+        "summary": "criar usuários",
+        "tag": ["user"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "lastname": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string min 8 length"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
