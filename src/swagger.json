@@ -45,6 +45,29 @@
           }
         }
       }
+    },
+    "/login": {
+      "post": {
+        "summary": "logar usuário",
+        "description": "vai verificar os dados e se for encontrado vai retorna que está autorizado",
+        "tag": ["user"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string min 8 length"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
