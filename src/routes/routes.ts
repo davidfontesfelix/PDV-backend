@@ -51,7 +51,7 @@ router.post('/login', async (request, response) => {
 
       const data = await getUsers()
 
-      const userReturn = data.find((user: { email: string; password: string }) => user.email === email && user.password === password)
+      const userReturn = data.find((user: { email: string; password: string }) => user.email === email || user.password === password)
 
       if(email === userReturn.email && password === userReturn.password) {
         const { password, ...user} = userReturn
@@ -59,8 +59,10 @@ router.post('/login', async (request, response) => {
 
         response.json({ message: 'Usuário autenticado com sucesso', token, user, })
 
-      } else {
-        response.status(401).json({message: 'Credential inválidas'})
+      } if(email !== userReturn.email && password === userReturn.password){
+        response.status(401).json({error: 'Usuário não encontrado'})
+      } else if(email === userReturn.email && password !== userReturn.password) {
+        response.status(401).json({error: 'Senha incorreta'})
       }
 
   } catch (error) {
