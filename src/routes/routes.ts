@@ -64,8 +64,11 @@ router.post('/login', async (request, response) => {
       }
 
   } catch (error) {
-    response.status(503).json({ error: 'O servidor não conseguiu receber os dados' })
-    
+    if (error instanceof ZodError) {
+      response.status(400).json({ error: 'Erro de validação dos dados' })
+    } else {
+      response.status(503).json({ error: 'O servidor não conseguiu receber os dados' })
+    }
   }
 })
 
