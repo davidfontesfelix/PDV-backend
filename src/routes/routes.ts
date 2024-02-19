@@ -6,6 +6,9 @@ import { v4 as uuidv4 } from 'uuid'
 import jwt, { Secret } from 'jsonwebtoken'
 import '../../config/dotenv.config';
 import { verifyToken } from '../middlewares/authMiddleware'
+import cors from 'cors'
+
+router.use(cors())
  
 router.get('/users', async (request, response) => {
   const data = await getUsers()
@@ -36,7 +39,6 @@ router.get('/user/:id', verifyToken, async (request, response) => {
 })
 
 router.post('/login', async (request, response) => {
-  
   try {
       const secretKey = process.env.SECRET_KEY
 
@@ -45,7 +47,7 @@ router.post('/login', async (request, response) => {
         password: z.string().min(8)
       })
 
-      const {email, password} = loginSchema.parse(request.body)
+      const {email, password} = await loginSchema.parse(request.body)
 
       const data = await getUsers()
 
@@ -54,7 +56,9 @@ router.post('/login', async (request, response) => {
       if(email === userReturn.email && password === userReturn.password) {
         const { password, ...user} = userReturn
         const token = jwt.sign({email, password}, secretKey as Secret)
+
         response.json({ message: 'Usuário autenticado com sucesso', token, user, })
+
       } else {
         response.status(401).json({message: 'Credential inválidas'})
       }
