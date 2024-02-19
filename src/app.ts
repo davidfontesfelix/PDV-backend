@@ -3,8 +3,10 @@ import { router } from './routes/routes'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from './swagger.json'
 import '../config/dotenv.config';
+import cors from 'cors'
 
 const app = express()
+app.use(cors());
 const port = process.env.PORT ?? 3001
 
 const CSS_URL =

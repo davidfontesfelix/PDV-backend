@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { addDoc, arrayRemove, arrayUnion, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore'
+import {arrayUnion, collection, doc, getDocs, getFirestore, updateDoc} from 'firebase/firestore'
 import { z } from 'zod'
 import '../../config/dotenv.config';
 
@@ -19,7 +19,6 @@ const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
 const CreateUserParamsSchema = z.object({
-  authenticated: z.boolean(),
   id: z.string(),
   name: z.string(),
   lastname: z.string(),
@@ -35,28 +34,6 @@ const createUser = async (user: CreateUserParams) => {
   })
 }
 
-type CredentialParams = z.infer<typeof CreateUserParamsSchema>
-
-const updateAuthenticationToTrue = async (userCredential: CredentialParams) => {
-  const userRef = doc(db, 'users', 'userDocs')
-  
-  await updateDoc(userRef, {
-    users: arrayUnion({ name: userCredential.name, id: userCredential.id, email: userCredential.email, lastname: userCredential.lastname, password: userCredential.password, authenticated: true })}
-  )
-  if (userCredential.authenticated === false) {
-    updateDoc(userRef, {
-      users: arrayRemove(userCredential)
-    })
-  }
-}
-
-// const loginUser = async () => {
-//   const usersCollection = collection(db, 'users')
-//   const data = await getDocs(usersCollection)
-//   const usersList = data.docs.map((doc) => doc.data())
-//   return usersList[0]
-// }
-
 const getUsers = async () => {
   const usersCollection = collection(db, 'users')
   const data = await getDocs(usersCollection)
@@ -64,4 +41,4 @@ const getUsers = async () => {
   return usersList[0].users
 }
 
-export { createUser, getUsers, updateAuthenticationToTrue }
+export { createUser, getUsers }

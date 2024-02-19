@@ -1,34 +1,64 @@
-import express from 'express'
+import express, { response } from 'express'
 import z, { ZodError } from 'zod'
-import { createUser, getUsers, updateAuthenticationToTrue } from '../firebase/firebase'
+import { createUser, getUsers} from '../firebase/firebase'
 const router = express.Router()
 import { v4 as uuidv4 } from 'uuid'
-
-
+import jwt, { Secret } from 'jsonwebtoken'
+import '../../config/dotenv.config';
+import { verifyToken } from '../middlewares/authMiddleware'
  
 router.get('/users', async (request, response) => {
   const data = await getUsers()
   return response.status(200).json(data) 
 })
 
-router.post('/login', async (request, response) => {
+router.get('/user/:id', verifyToken, async (request, response) => {
   try {
-    const loginSchema = z.object({
-      email: z.string().email(),
-      password: z.string().min(8)
-    })
-
-    const {email, password} = loginSchema.parse(request.body)
-
+    const id = request.params.id
+  
     const data = await getUsers()
-    const userReturn = data.find((user: { email: string; password: string }) => user.email === email && user.password === password)
+    const user = data.find((user: {id: string}) => user.id === id)
 
-    if(userReturn) {
-      await updateAuthenticationToTrue(userReturn)
-      return response.status(200).json({message: "Autorizado"})
+    if(user) {
+      response.status(201).json({user})
     } else {
-      return response.status(400).json({ error: "Usuario não encontrado"})
+      response.status(401).json({ error: "Usuário não encontrado"})
     }
+    
+  } catch (error) {
+    if (error instanceof ZodError) {
+      response.status(401).json({ error: 'Erro de validação dos dados' })
+    } else {
+      response.status(503).json({ error: 'Erro ao tentar encontrar o user' })
+    }
+  }
+
+})
+
+router.post('/login', async (request, response) => {
+  
+  try {
+      const secretKey = process.env.SECRET_KEY
+
+      const loginSchema = z.object({
+        email: z.string().email(),
+        password: z.string().min(8)
+      })
+
+      const {email, password} = loginSchema.parse(request.body)
+
+      const data = await getUsers()
+
+      const userReturn = data.find((user: { email: string; password: string }) => user.email === email && user.password === password)
+
+      if(email === userReturn.email && password === userReturn.password) {
+        const { password, ...user} = userReturn
+        const token = jwt.sign({email, password}, secretKey as Secret)
+        response.json({ message: 'Usuário autenticado com sucesso', token, user, })
+      } else {
+        response.status(401).json({message: 'Credential inválidas'})
+      }
+
   } catch (error) {
     if (error instanceof ZodError) {
       response.status(400).json({ error: 'Erro de validação dos dados' })
@@ -47,13 +77,11 @@ router.post('/register', async (request, response) => {
       password: z.string().min(8)
     })
     const id = uuidv4()
-    const authenticated = false
 
     const { name, lastname, email, password } = createRegisterSchema.parse(request.body)
 
     const data = {
       id,
-      authenticated,
       name,
       lastname,
       email,

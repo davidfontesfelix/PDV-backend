@@ -18,6 +18,21 @@
         "tag": ["user"]
       }
     },
+    "/user/:id": {
+      "get": {
+        "summary": "procurar o user pela id",
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "/register" : {
       "post": {
         "summary": "criar usuários",
