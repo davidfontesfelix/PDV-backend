@@ -1,21 +1,21 @@
 import express from 'express'
-import { router } from './routes/routes'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from './swagger.json'
 import '../config/dotenv.config';
 import cors from 'cors'
+import { userRoutes } from './routes/user-routes';
 
 const app = express()
+
 app.use(cors());
+app.use(express.json())
+app.use(userRoutes)
+
 const port = process.env.PORT ?? 3001
 
 const CSS_URL =
-  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css";
-
-app.use(express.json())
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.6.0/swagger-ui.min.css";
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, {customCssUrl: CSS_URL}))
-
-app.use(router)
 
 app.listen(port, () => { console.log('O servidor está rodando na porta' + port) })

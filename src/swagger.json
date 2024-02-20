@@ -83,6 +83,41 @@
           }
         }
       }
+    },
+    "/edit/:id": {
+      "put": {
+        "summary": "editar usuário",
+        "description": "Rota para editar dados do usuário",
+        "tag": ["user"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "lastname": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string min 8 length"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/delete/:id": {
+      "delete": {
+        "summary": "deletar um usuário",
+        "tag": ["user"]
+      }
     }
   }
 }
