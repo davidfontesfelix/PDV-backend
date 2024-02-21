@@ -53,7 +53,7 @@ userRoutes.post('/login', async (request, response) => {
       if (user === 'error') {
         return response.status(400).json({error: "Usuário não encontrado"})
       } else {
-        const token = jwt.sign({email, password}, secretKey as Secret)
+        const token = jwt.sign({email}, secretKey as Secret)
         return response.status(201).json({ message: 'Usuário autenticado com sucesso', token, user, })
       }
 
