@@ -1,6 +1,6 @@
 import express from 'express'
-import z, { ZodError, string } from 'zod'
-import { checkEmail, checkId, checkUser, createUser, deleteUser, getUsers, updateUser} from '../firebase/firebase'
+import z, { ZodError } from 'zod'
+import { checkEmail, checkId, checkUser, createUser, deleteUser, getUsers, updateUser} from '../controllers/user-controller'
 const userRoutes = express.Router()
 import { v4 as uuidv4 } from 'uuid'
 import jwt, { Secret } from 'jsonwebtoken'
@@ -16,7 +16,7 @@ const userSchema = z.object({
   password: z.string().min(8)
 })
  
-userRoutes.get('/users', async (request, response) => {
+userRoutes.get('/users', verifyToken, async (request, response) => {
   const data = await getUsers()
   return response.status(200).json(data) 
 })
@@ -26,7 +26,7 @@ userRoutes.get('/user/:id', verifyToken, async (request, response) => {
     const id = request.params.id
     const user = await checkId(id)
 
-    if(user !== 'error') {
+    if(user) {
       response.status(201).json({user})
     } else {
       response.status(401).json({ error: "Id não foi encontrado"})
@@ -47,15 +47,17 @@ userRoutes.post('/login', async (request, response) => {
       })
 
       const {email, password} = loginSchema.parse(request.body)
+
       const user = await checkUser(email, password)
 
       
-      if (user === 'error') {
+      if (!user) {
         return response.status(400).json({error: "Usuário não encontrado"})
-      } else {
-        const token = jwt.sign({email}, secretKey as Secret)
-        return response.status(201).json({ message: 'Usuário autenticado com sucesso', token, user, })
       }
+
+      const token = jwt.sign({email}, secretKey as Secret)
+      return response.status(201).json({ message: 'Usuário autenticado com sucesso', token, user, })
+      
 
   } catch (error) {
     if (error instanceof ZodError) {
@@ -73,6 +75,7 @@ userRoutes.post('/register', async (request, response) => {
     const { name, lastname, email, password } = userSchema.parse(request.body)
 
     const toCheck = await checkEmail(email)
+    
     if(toCheck) {
       return response.status(400).json({error: 'Email já está em uso'})
     } else {

@@ -14,13 +14,13 @@
   "paths": {
     "/users": {
       "get": {
-        "summary": "exibir todos os users",
+        "summary": "Exibir todos os users",
         "tag": ["user"]
       }
     },
     "/user/:id": {
       "get": {
-        "summary": "procurar o user pela id",
+        "summary": "Procurar o user pela id",
         "parameters": [
           {
             "name": "Bearer Token",
@@ -35,7 +35,7 @@
     },
     "/register" : {
       "post": {
-        "summary": "criar usuários",
+        "summary": "Criar usuários",
         "tag": ["user"],
         "requestBody": {
           "content": {
@@ -64,7 +64,7 @@
     "/login": {
       "post": {
         "summary": "logar usuário",
-        "description": "vai verificar os dados e se for encontrado vai retorna que está autorizado",
+        "description": "Vai verificar os dados e se for encontrado vai retorna que está autorizado",
         "tag": ["user"],
         "requestBody": {
           "content": {
@@ -115,8 +115,79 @@
     },
     "/delete/:id": {
       "delete": {
-        "summary": "deletar um usuário",
+        "summary": "Deletar um usuário",
         "tag": ["user"]
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Recebe uma Array de todos os produtos",
+        "tag": ["product"]
+      }
+    },
+    "/products/register" : {
+      "post": {
+        "summary": "Criar produto",
+        "tag": ["product"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "code": {
+                    "type": "number min length 13"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "amount": {
+                    "type": "string min 8 length"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/edit/:code" : {
+      "put": {
+        "summary": "Editar produto",
+        "tag": ["product"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "lastname": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string min 8 length"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/products/delete/:code": {
+      "delete": {
+        "summary": "Deletar um produto",
+        "tag": ["product"]
       }
     }
   }

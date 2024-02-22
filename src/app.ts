@@ -1,15 +1,18 @@
 import express from 'express'
 import swaggerUi from 'swagger-ui-express'
 import swaggerFile from './swagger.json'
-import '../config/dotenv.config';
+import '../config/dotenv.config'
 import cors from 'cors'
-import { userRoutes } from './routes/user-routes';
+import { userRoutes } from './routes/user-routes'
+import { productRoutes } from './routes/product-routes'
 
 const app = express()
 
 app.use(cors());
 app.use(express.json())
+
 app.use(userRoutes)
+app.use(productRoutes)
 
 const port = process.env.PORT ?? 3001
 

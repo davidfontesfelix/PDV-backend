@@ -1,8 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt, { Secret } from 'jsonwebtoken'
-import '../../config/dotenv.config';
 
 const secretKey = process.env.SECRET_KEY
+
+interface DecodedToken {
+  username: string;
+  // Outras propriedades do token, se houver
+}
 
 interface RequestWithUsername extends Request {
   username?: string;
@@ -21,7 +25,7 @@ export function verifyToken(request: RequestWithUsername, response: Response, ne
       return response.status(403).json({ message: 'Token inválido' })
     }
 
-    request.username = (decoded as any).username
+    request.username = (decoded as DecodedToken).username
     next()
   })
 

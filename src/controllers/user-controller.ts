@@ -1,27 +1,12 @@
-import { initializeApp } from 'firebase/app'
-import {addDoc, arrayUnion, collection, deleteDoc, doc, getDocs, getFirestore, query, updateDoc, where} from 'firebase/firestore'
+import {addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where} from 'firebase/firestore'
 import { z } from 'zod'
-import '../../config/dotenv.config';
 import { compare } from 'bcrypt';
+import { db } from '../config/firebase-config';
+import { UserParamsSchema } from '../models/models';
 
-const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID
-}
 
-const app = initializeApp(firebaseConfig)
-const db = getFirestore(app)
 
-const CreateUserParamsSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  lastname: z.string(),
-  email: z.string().email(),
-  password: z.string()
-})
-
-type UserParams = z.infer<typeof CreateUserParamsSchema>
+type UserParams = z.infer<typeof UserParamsSchema>
 const usersCollection = collection(db, 'users')
 
 const getUsers = async () => {
@@ -35,42 +20,39 @@ const checkEmail = async (email: string) => {
   const querySnapshot = await getDocs(q);
   if (querySnapshot.size > 0) {
     return true
-  } else {
-    return false
   }
+
+  return false
 }
 
 const checkUser = async (email: string, password: string) => {
   const q = query(usersCollection, where('email', '==', email));
   const querySnapshot = await getDocs(q);
   
- 
-  if (querySnapshot.size > 0) {
-    const user = querySnapshot.docs[0].data()
-    const check = await compare(password, user.password)
-    if(check) {
-      const {password, ...dataWithoutPassword} = user
-      return dataWithoutPassword
-    } else {
-      return 'error'
-    }
-  } else {
-    return 'error'
+  if (querySnapshot.empty) {
+    return false
   }
+
+  const user = querySnapshot.docs[0].data()
+  const check = await compare(password, user.password)
+
+  if (check) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const {password, ...dataWithoutPassword} = user
+    return dataWithoutPassword
+  }
+
+  return false
 }
 
 const checkId = async (id: string) => {
   const q = query(usersCollection, where('id', '==', id));
   const querySnapshot = await getDocs(q);
   
-  let user = null
-  if (querySnapshot.size > 0) {
-    querySnapshot.forEach((doc) => {
-      user = doc.data()
-    })
-    return user
+  if (querySnapshot.empty) {
+    return false
   } else {
-    return 'error'
+    return querySnapshot.docs[0].data()
   }
 }
 
