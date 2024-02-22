@@ -3,7 +3,7 @@
   "info": {
     "title": "API PDV",
     "description": "Api de controle de ponto de venda",
-    "version": "1.0.0"
+    "version": "1.3.2"
   },
   "servers": [
     {
@@ -11,15 +11,20 @@
       "description": "URL de produção"
     }
   ], 
+  "tags": [
+    {"name": "user"},
+    {"name": "product"}
+  ],
   "paths": {
     "/users": {
       "get": {
         "summary": "Exibir todos os users",
-        "tag": ["user"]
+        "tags": ["user"]
       }
     },
     "/user/:id": {
       "get": {
+        "tags": ["user"],
         "summary": "Procurar o user pela id",
         "parameters": [
           {
@@ -36,7 +41,7 @@
     "/register" : {
       "post": {
         "summary": "Criar usuários",
-        "tag": ["user"],
+        "tags": ["user"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -65,7 +70,7 @@
       "post": {
         "summary": "logar usuário",
         "description": "Vai verificar os dados e se for encontrado vai retorna que está autorizado",
-        "tag": ["user"],
+        "tags": ["user"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -88,7 +93,7 @@
       "put": {
         "summary": "editar usuário",
         "description": "Rota para editar dados do usuário",
-        "tag": ["user"],
+        "tags": ["user"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -116,19 +121,19 @@
     "/delete/:id": {
       "delete": {
         "summary": "Deletar um usuário",
-        "tag": ["user"]
+        "tags": ["user"]
       }
     },
     "/products": {
       "get": {
         "summary": "Recebe uma Array de todos os produtos",
-        "tag": ["product"]
+        "tags": ["product"]
       }
     },
     "/products/register" : {
       "post": {
         "summary": "Criar produto",
-        "tag": ["product"],
+        "tags": ["product"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -159,7 +164,7 @@
     "/products/edit/:code" : {
       "put": {
         "summary": "Editar produto",
-        "tag": ["product"],
+        "tags": ["product"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -187,19 +192,19 @@
     "/products/delete/:code": {
       "delete": {
         "summary": "Deletar um produto",
-        "tag": ["product"]
+        "tags": ["product"]
       }
     },
     "/categories": {
       "get": {
         "summary": "Recebe uma Array de todas as categorias",
-        "tag": ["product"]
+        "tags": ["category"]
       }
     },
     "/categories/register" : {
       "post": {
         "summary": "Criar categoria",
-        "tag": ["category"],
+        "tags": ["category"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -221,7 +226,7 @@
     "/categories/edit/:id" : {
       "put": {
         "summary": "Editar categoria",
-        "tag": ["category"],
+        "tags": ["category"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -243,7 +248,7 @@
     "/categories/delete/:id": {
       "delete": {
         "summary": "Deletar uma categoria",
-        "tag": ["category"]
+        "tags": ["category"]
       }
     }
   }
