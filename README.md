@@ -13,9 +13,7 @@ https://nodejs.org/en/download
 
 3- crie um .env com as configs do firebase baseando no .env.example
 
-4- Crie as coleções users e products no seu firestore database
-
-5 - No terminal executar os comandos abaixo
+4 - No terminal executar os comandos abaixo
 
   ```
   $ npm ci

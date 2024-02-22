@@ -9,7 +9,7 @@ const UserParamsSchema = z.object({
 })
 
 
-const ProductParams = z.object({
+const ProductParamsSchema = z.object({
   code: z.number().min(13),
   name: z.string(),
   category: z.string(),
@@ -17,4 +17,10 @@ const ProductParams = z.object({
   amount: z.number()
 })
 
-export {UserParamsSchema, ProductParams}
+const CategoryParamsSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string()
+})
+
+export {UserParamsSchema, ProductParamsSchema, CategoryParamsSchema}

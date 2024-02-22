@@ -189,6 +189,62 @@
         "summary": "Deletar um produto",
         "tag": ["product"]
       }
+    },
+    "/categories": {
+      "get": {
+        "summary": "Recebe uma Array de todas as categorias",
+        "tag": ["product"]
+      }
+    },
+    "/categories/register" : {
+      "post": {
+        "summary": "Criar categoria",
+        "tag": ["category"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/edit/:id" : {
+      "put": {
+        "summary": "Editar categoria",
+        "tag": ["category"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/categories/delete/:id": {
+      "delete": {
+        "summary": "Deletar uma categoria",
+        "tag": ["category"]
+      }
     }
   }
 }
