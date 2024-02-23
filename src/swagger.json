@@ -3,7 +3,7 @@
   "info": {
     "title": "API PDV",
     "description": "Api de controle de ponto de venda",
-    "version": "1.3.3"
+    "version": "1.4.3"
   },
   "servers": [
     {

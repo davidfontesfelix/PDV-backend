@@ -6,6 +6,7 @@ import cors from 'cors'
 import { userRoutes } from './routes/user-routes'
 import { productRoutes } from './routes/product-routes'
 import { categoriesRoutes } from './routes/categories-routes'
+import { salesRoutes } from './routes/sales-routes'
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(express.json())
 app.use(userRoutes)
 app.use(productRoutes)
 app.use(categoriesRoutes)
+app.use(salesRoutes)
 
 const port = process.env.PORT ?? 3001
 
@@ -23,4 +25,12 @@ const CSS_URL =
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, {customCssUrl: CSS_URL}))
 
-app.listen(port, () => { console.log('O servidor está rodando na porta' + port) })
+const server = app.listen(port, () => { console.log('O servidor está rodando na porta' + port) })
+
+process.on('SIGTERM', () => {
+  console.info('Recebido sinal de encerramento. Encerrando servidor...')
+  server.close(() => {
+    console.log('Servidor encerrado com sucesso')
+    process.exit(0)
+  })
+})
