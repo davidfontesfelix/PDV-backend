@@ -48,7 +48,7 @@ categoriesRoutes.put("/categories/edit/:id", async (request, response) => {
     const idExists = await updateCategory({id, name, description}, id)
 
     if (idExists) {
-      response.status(201).json({ message: 'Alterado com sucesso'})
+      response.status(200).json({ message: 'Alterado com sucesso'})
     } else {
       response.status(404).json({ error: 'Id não encontrado'})
       
@@ -70,7 +70,7 @@ categoriesRoutes.delete("/categories/delete/:id", async (request, response) => {
     if (!deleteCategoryResponse) {
       return response.status(404).json({error: 'Id não foi encontrado'})
     } else {
-      return response.status(201).json({message: "Excluído com sucesso"})
+      return response.status(200).json({message: "Excluído com sucesso"})
     }
   } catch (error) {
     if (error instanceof ZodError) {

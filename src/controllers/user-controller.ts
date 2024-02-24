@@ -2,11 +2,11 @@ import {addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where} fr
 import { z } from 'zod'
 import { compare } from 'bcrypt';
 import { db } from '../config/firebase-config';
-import { UserParamsSchema } from '../models/models';
+import { UserSchema } from '../models/models';
 
 
 
-type UserParams = z.infer<typeof UserParamsSchema>
+type UserParams = z.infer<typeof UserSchema>
 const usersCollection = collection(db, 'users')
 
 const getUsers = async () => {

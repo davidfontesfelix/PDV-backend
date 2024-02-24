@@ -1,5 +1,5 @@
 import express from "express";
-import { checkCode, createProduct, deleteProduct, getAllProducts, updateAmount, updateProduct } from "../controllers/product-controller";
+import { checkCode, createProduct, deleteProduct, getAllProducts, getProductByCode, updateAmount, updateProduct } from "../controllers/product-controller";
 import { ZodError, z } from "zod";
 const productRoutes = express.Router()
 
@@ -19,8 +19,31 @@ const ProductParamsNoCode = z.object({
 })
 
 productRoutes.get("/products", async (request, response) => {
-  const routerResponse = await getAllProducts()
-  return response.status(201).json(routerResponse)
+  try {
+    const routerResponse = await getAllProducts()
+    response.status(200).json(routerResponse)
+  } catch {
+    response.status(503).json({ error: 'O servidor não conseguiu receber os dados' })
+  }
+})
+
+productRoutes.get("/products/:code", async (request, response) => {
+  try {
+    const code = request.params.code
+    const productByCodeResponse = await getProductByCode(parseInt(code))
+
+    if(!productByCodeResponse) {
+      response.status(404).json('Código não encontrado')
+    } 
+
+    response.status(200).json(productByCodeResponse)
+  } catch (error) {
+    if (error instanceof ZodError) {
+      response.status(400).json({ error: 'Erro de validação dos dados' })
+    } else {
+      response.status(503).json({ error: 'O servidor não conseguiu receber os dados' })
+    }
+  }
 })
 
 productRoutes.post("/products/register", async (request, response) => {
@@ -31,7 +54,7 @@ productRoutes.post("/products/register", async (request, response) => {
 
     if (codeExists) {
       await updateAmount(code, amount);
-      return response.status(201).json({ message: "A quantidade do produto foi alterada" });
+      return response.status(200).json({ message: "A quantidade do produto foi alterada" });
     } else {
       await createProduct({ code, name, category, price, amount });
       return response.status(201).json({ message: "Produto criado com sucesso" });
@@ -55,7 +78,7 @@ productRoutes.put("/products/edit/:code", async (request, response) => {
 
     if(codeExists) {
       await updateProduct({code: codeInt, name, category, price, amount}, codeInt)
-      response.status(201).json({message: "Editado com sucesso"})
+      response.status(200).json({message: "Editado com sucesso"})
     } else {
       response.status(400).json({ error: 'Produto não encontrado' })
     }
@@ -80,7 +103,7 @@ productRoutes.delete("/products/delete/:code", async (request, response) => {
     if (!deleteProductResponse) {
       return response.status(404).json({error: 'Id não foi encontrado'})
     } else {
-      return response.status(201).json({message: "Excluído com sucesso"})
+      return response.status(200).json({message: "Excluído com sucesso"})
     }
   } catch (error) {
     if (error instanceof ZodError) {

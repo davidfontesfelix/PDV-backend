@@ -3,7 +3,7 @@
   "info": {
     "title": "API PDV",
     "description": "Api de controle de ponto de venda",
-    "version": "1.4.3"
+    "version": "1.5.4"
   },
   "servers": [
     {
@@ -13,7 +13,9 @@
   ], 
   "tags": [
     {"name": "user"},
-    {"name": "product"}
+    {"name": "product"},
+    {"name": "category"},
+    {"name": "sales"} 
   ],
   "paths": {
     "/users": {
@@ -127,6 +129,12 @@
     "/products": {
       "get": {
         "summary": "Recebe uma Array de todos os produtos",
+        "tags": ["product"]
+      }
+    },
+    "/products/:code": {
+      "get": {
+        "summary": "Recebe o produto pelo código",
         "tags": ["product"]
       }
     },
@@ -249,6 +257,43 @@
       "delete": {
         "summary": "Deletar uma categoria",
         "tags": ["category"]
+      }
+    },
+    "/sales/today": {
+      "get": {
+        "summary": "Mostra todas as vendas do dia",
+        "tags": ["sales"]
+      }
+    },
+    "/sales/create": {
+      "post": {
+        "summary": "Registrar uma venda",
+        "tags": ["sales"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "charge": {
+                    "type": "number"
+                  },
+                  "paid": {
+                    "type": "number"
+                  },
+                  "paymentMethod": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/delete/id": {
+      "delete": {
+        "summary": "Deletar uma venda por id",
+        "tags": ["sales"]
       }
     }
   }

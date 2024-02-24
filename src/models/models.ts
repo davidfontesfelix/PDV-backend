@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const UserParamsSchema = z.object({
+const UserSchema = z.object({
   id: z.string(),
   name: z.string(),
   lastname: z.string(),
@@ -9,7 +9,7 @@ const UserParamsSchema = z.object({
 })
 
 
-const ProductParamsSchema = z.object({
+const ProductSchema = z.object({
   code: z.number().min(13),
   name: z.string(),
   category: z.string(),
@@ -17,10 +17,21 @@ const ProductParamsSchema = z.object({
   amount: z.number()
 })
 
-const CategoryParamsSchema = z.object({
+const CategorySchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string()
 })
 
-export {UserParamsSchema, ProductParamsSchema, CategoryParamsSchema}
+
+const SalesSchema = z.object({
+  id: z.number(),
+  charge: z.number().positive(),
+  paid: z.number().positive(),
+  change: z.number().positive(),
+  paymentMethod: z.string(),
+  timestamp: z.date()
+})
+
+
+export {UserSchema, ProductSchema, CategorySchema, SalesSchema}

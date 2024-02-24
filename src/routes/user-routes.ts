@@ -27,9 +27,9 @@ userRoutes.get('/user/:id', verifyToken, async (request, response) => {
     const user = await checkId(id)
 
     if(user) {
-      response.status(201).json({user})
+      response.status(200).json({user})
     } else {
-      response.status(401).json({ error: "Id não foi encontrado"})
+      response.status(404).json({ error: "Id não foi encontrado"})
     }
     
   } catch (error) {
@@ -52,11 +52,11 @@ userRoutes.post('/login', async (request, response) => {
 
       
       if (!user) {
-        return response.status(400).json({error: "Usuário não encontrado"})
+        return response.status(404).json({error: "Usuário não encontrado"})
       }
 
       const token = jwt.sign({email}, secretKey as Secret)
-      return response.status(201).json({ message: 'Usuário autenticado com sucesso', token, user, })
+      return response.status(200).json({ message: 'Usuário autenticado com sucesso', token, user, })
       
 
   } catch (error) {
@@ -77,7 +77,7 @@ userRoutes.post('/register', async (request, response) => {
     const toCheck = await checkEmail(email)
     
     if(toCheck) {
-      return response.status(400).json({error: 'Email já está em uso'})
+      return response.status(409).json({error: 'Email já está em uso'})
     } else {
       const randomSalt = randomInt(10, 16) 
       const passwordHash = await hash(password, randomSalt)
@@ -125,7 +125,7 @@ userRoutes.put('/edit/:id', async (request, response) => {
    if (!updateUserReturn) {
      return response.status(404).json({error: 'Id não foi encontrado'})
    } else {
-     return response.status(201).json({message: "Editado com sucesso"})
+     return response.status(200).json({message: "Editado com sucesso"})
    }
 
  } catch (error) {
@@ -146,7 +146,7 @@ userRoutes.delete('/delete/:id', async (request, response) => {
     if (!responseDeleteUser) {
       return response.status(404).json({error: 'Id não foi encontrado'})
     } else {
-      return response.status(201).json({message: "Excluído com sucesso"})
+      return response.status(200).json({message: "Excluído com sucesso"})
     }
   } catch (error) {
     if (error instanceof ZodError) {

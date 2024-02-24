@@ -1,10 +1,10 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import { db } from "../config/firebase-config";
 import { z } from "zod";
-import { CategoryParamsSchema } from "../models/models";
+import { CategorySchema } from "../models/models";
 
 const categoriesCollection = collection(db, 'categories')
-type categoryParams = z.infer<typeof CategoryParamsSchema>
+type categoryParams = z.infer<typeof CategorySchema>
 
 const getALlCategories = async () => {
   const data = await getDocs(categoriesCollection)
