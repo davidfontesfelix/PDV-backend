@@ -7,6 +7,9 @@ import { userRoutes } from './routes/user-routes'
 import { productRoutes } from './routes/product-routes'
 import { categoriesRoutes } from './routes/categories-routes'
 import { salesRoutes } from './routes/sales-routes'
+import cron from 'node-cron'
+import { deleteSalesPreviousMonth } from './scripts/delete-sales-previous-month'
+import { excludeResultsFromPreviousMonth } from './scripts/exclude-results-from-previous-months'
 
 const app = express()
 
@@ -40,5 +43,8 @@ process.on('SIGTERM', () => {
     process.exit(0)
   })
 })
+
+cron.schedule('0 0 1 * *', async () => deleteSalesPreviousMonth())
+cron.schedule('0 0 1 1 * ', async () => excludeResultsFromPreviousMonth())
 
 export default app

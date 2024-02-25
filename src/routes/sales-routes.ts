@@ -24,8 +24,7 @@ salesRoutes.post("/sales/create", async (request, response) => {
     const salesDocsSize = await collectionSize('sales')
     
     await createSale({id: salesDocsSize + 1, charge, paid, change, paymentMethod, timestamp})
-    console.log(salesDocsSize)
-
+    
     response.status(201).json({message: "Venda feita com sucesso"})
   } catch (error) {
     if (error instanceof ZodError) {
