@@ -10,7 +10,7 @@ const UserSchema = z.object({
 
 
 const ProductSchema = z.object({
-  code: z.number().min(13),
+  code: z.number().min(12),
   name: z.string(),
   category: z.string(),
   price: z.number(),

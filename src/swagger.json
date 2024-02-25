@@ -148,7 +148,7 @@
               "schema": {
                 "properties": {
                   "code": {
-                    "type": "number min length 13"
+                    "type": "number min length 12"
                   },
                   "name": {
                     "type": "string"

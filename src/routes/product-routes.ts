@@ -4,7 +4,7 @@ import { ZodError, z } from "zod";
 const productRoutes = express.Router()
 
 const ProductParams = z.object({
-  code: z.number().min(13),
+  code: z.number().min(12),
   name: z.string(),
   category: z.string(),
   price: z.number(),
@@ -29,14 +29,17 @@ productRoutes.get("/products", async (request, response) => {
 
 productRoutes.get("/products/:code", async (request, response) => {
   try {
-    const code = request.params.code
+    const paramSchema = z.object({
+      code: z.string().min(12)
+    })
+    const { code } = paramSchema.parse({  code: request.params.code})
     const productByCodeResponse = await getProductByCode(parseInt(code))
 
     if(!productByCodeResponse) {
-      response.status(404).json('Código não encontrado')
+      return response.status(404).json({error: 'Código não encontrado'})
     } 
 
-    response.status(200).json(productByCodeResponse)
+    return response.status(200).json(productByCodeResponse)
   } catch (error) {
     if (error instanceof ZodError) {
       response.status(400).json({ error: 'Erro de validação dos dados' })
@@ -70,7 +73,11 @@ productRoutes.post("/products/register", async (request, response) => {
 
 productRoutes.put("/products/edit/:code", async (request, response) => {
   try {
-    const code = request.params.code
+    const paramSchema = z.object({
+      code: z.string().min(12)
+    })
+    
+    const { code } = paramSchema.parse({  code: request.params.code})
     const codeInt = parseInt(code)
 
     const codeExists = await checkCode(codeInt)
@@ -95,7 +102,11 @@ productRoutes.put("/products/edit/:code", async (request, response) => {
 
 productRoutes.delete("/products/delete/:code", async (request, response) => {
   try {
-    const code = request.params.code
+    const paramSchema = z.object({
+      code: z.string().min(12)
+    })
+
+    const { code } = paramSchema.parse({  code: request.params.code})
     const codeInt = parseInt(code)
 
     const deleteProductResponse = await deleteProduct(codeInt)

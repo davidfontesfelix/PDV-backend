@@ -109,24 +109,26 @@ userRoutes.put('/edit/:id', async (request, response) => {
 
    const { name, lastname, email, password } = userSchema.parse(request.body)
 
-   const randomSalt = randomInt(10, 16) 
-   const passwordHash = await hash(password, randomSalt)
+   const idExist = await checkId(id)
 
-   const data = {
-     id,
-     name,
-     lastname,
-     email,
-     password: passwordHash
-   }
+   if(idExist) {
+      const randomSalt = randomInt(10, 16) 
+      const passwordHash = await hash(password, randomSalt)
+  
+      const data = {
+        id,
+        name,
+        lastname,
+        email,
+        password: passwordHash
+      }
 
-   const updateUserReturn = await updateUser(data)
- 
-   if (!updateUserReturn) {
-     return response.status(404).json({error: 'Id não foi encontrado'})
-   } else {
-     return response.status(200).json({message: "Editado com sucesso"})
-   }
+      await updateUser(data)
+
+      return response.status(200).json({message: "Editado com sucesso"})
+    }
+    
+   return response.status(404).json({error: 'Id não foi encontrado'})
 
  } catch (error) {
    if (error instanceof ZodError) {

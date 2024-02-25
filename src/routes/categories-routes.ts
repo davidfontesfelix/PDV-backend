@@ -68,7 +68,7 @@ categoriesRoutes.delete("/categories/delete/:id", async (request, response) => {
     const deleteCategoryResponse = await deleteCategory(id)
 
     if (!deleteCategoryResponse) {
-      return response.status(404).json({error: 'Id não foi encontrado'})
+      return response.status(404).json({error: 'Id não encontrado'})
     } else {
       return response.status(200).json({message: "Excluído com sucesso"})
     }

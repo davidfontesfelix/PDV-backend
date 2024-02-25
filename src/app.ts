@@ -18,7 +18,13 @@ app.use(productRoutes)
 app.use(categoriesRoutes)
 app.use(salesRoutes)
 
-const port = process.env.PORT ?? 3001
+let port: string | number
+
+if(process.env.NODE_ENV == 'test') {
+  port = 0
+} else {
+  port = process.env.PORT ?? 3001
+}
 
 const CSS_URL =
   "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css";
@@ -34,3 +40,5 @@ process.on('SIGTERM', () => {
     process.exit(0)
   })
 })
+
+export default app

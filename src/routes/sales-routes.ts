@@ -43,7 +43,7 @@ salesRoutes.delete('/sales/delete/:id', async (request, response) => {
     const deleteResponse = await deleteSale(parseInt(id))
 
     if (!deleteResponse) {
-      return response.status(404).json({error: 'Id não foi encontrado'})
+      return response.status(404).json({error: 'Id não encontrado'})
     } else {
       return response.status(200).json({message: "Excluído com sucesso"})
     }
