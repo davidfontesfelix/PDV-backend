@@ -3,7 +3,7 @@
   "info": {
     "title": "API PDV",
     "description": "Api de controle de ponto de venda",
-    "version": "1.7.5"
+    "version": "1.8.5"
   },
   "servers": [
     {
@@ -15,7 +15,9 @@
     {"name": "user"},
     {"name": "product"},
     {"name": "category"},
-    {"name": "sales"} 
+    {"name": "sales"},
+    {"name": "dashboard"}
+
   ],
   "paths": {
     "/users": {
@@ -294,6 +296,24 @@
       "delete": {
         "summary": "Deletar uma venda por id",
         "tags": ["sales"]
+      }
+    },
+    "/dashboard/today": {
+      "get": {
+        "summary": "Mostra todas as vendas do dia",
+        "tags": ["dashboard"]
+      }
+    },
+    "/dashboard/month": {
+      "get": {
+        "summary": "Mostra todas as vendas do mês",
+        "tags": ["dashboard"]
+      }
+    },
+    "/dashboard/month/:monthNumber": {
+      "get": {
+        "summary": "Mostra todas as vendas de um mês especifico do ano",
+        "tags": ["dashboard"]
       }
     }
   }

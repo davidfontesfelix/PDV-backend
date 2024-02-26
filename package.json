@@ -1,10 +1,10 @@
 {
   "name": "pdv-backend",
-  "version": "1.7.5",
+  "version": "1.8.5",
   "description": "Uma api de pdv",
   "main": "src/app.ts",
   "scripts": {
-    "test": "jest --watch",
+    "test": "jest",
     "dev": "tsx src/app.ts",
     "build": "tsup src",
     "start": "node dist/app.js",

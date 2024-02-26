@@ -31,7 +31,6 @@ salesRoutes.post("/sales/create", async (request, response) => {
       response.status(400).json({ error: 'Erro de validação dos dados' })
     } else {
       response.status(503).json({ error: 'O servidor não conseguiu receber os dados' })
-      console.error(error)
     }
   }
 })
