@@ -5,9 +5,10 @@ const UserSchema = z.object({
   name: z.string(),
   lastname: z.string(),
   email: z.string().email(),
-  password: z.string()
+  password: z.string(),
+  isAdmin: z.boolean(),
+  activated: z.boolean().optional()
 })
-
 
 const ProductSchema = z.object({
   code: z.number().min(12),

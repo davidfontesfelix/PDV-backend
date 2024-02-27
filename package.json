@@ -1,14 +1,13 @@
 {
   "name": "pdv-backend",
-  "version": "1.8.5",
+  "version": "1.9.5",
   "description": "Uma api de pdv",
   "main": "src/app.ts",
   "scripts": {
     "test": "jest",
-    "dev": "tsx src/app.ts",
+    "dev": "nodemon --watch 'src/' --exec 'ts-node src/app.ts' -e ts",
     "build": "tsup src",
-    "start": "node dist/app.js",
-    "nodemon": "nodemon --watch 'src/' --exec 'ts-node src/app.ts' -e ts"
+    "start": "node dist/app.js"
   },
   "keywords": [],
   "author": "",

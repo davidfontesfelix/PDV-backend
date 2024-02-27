@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where} from 'firebase/firestore'
 import { z } from 'zod'
 import { compare } from 'bcrypt';
@@ -12,7 +13,13 @@ const usersCollection = collection(db, 'users')
 const getUsers = async () => {
   const data = await getDocs(usersCollection)
   const usersList = data.docs.map((doc) => ({...doc.data()}))
-  return usersList
+  const list = usersList.map((unused, index) => {
+    const {password, ...listWithoutPassword} = usersList[index]
+    return listWithoutPassword
+  })
+
+
+  return list
 }
 
 const checkEmail = async (email: string) => {
@@ -25,6 +32,16 @@ const checkEmail = async (email: string) => {
   return false
 }
 
+const userStatus = async (email: string) => {
+  const q = query(usersCollection, where('email', '==', email), where('activated', '==', true))
+  const querySnapshot = await getDocs(q)
+
+  if (querySnapshot.size > 0) {
+    return true
+  }
+  return false
+}
+
 const checkUser = async (email: string, password: string) => {
   const q = query(usersCollection, where('email', '==', email));
   const querySnapshot = await getDocs(q);
@@ -34,11 +51,21 @@ const checkUser = async (email: string, password: string) => {
   }
 
   const user = querySnapshot.docs[0].data()
+
+  const idRef = querySnapshot.docs[0].id
+  const usersCollectionId = doc(db, 'users', idRef)
+  updateDoc(usersCollectionId, {
+    ...user,
+    online: true
+  })
+
+
+
   const check = await compare(password, user.password)
 
   if (check) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const {password, ...dataWithoutPassword} = user
+    const {password, online, ...dataWithoutPassword} = user
     return dataWithoutPassword
   }
 
@@ -89,4 +116,4 @@ const deleteUser = async (id: string) => {
   }
 }
 
-export { createUser, getUsers, checkEmail, checkUser, checkId, updateUser, deleteUser }
+export { createUser, getUsers, checkEmail, checkUser, checkId, updateUser, deleteUser, userStatus}

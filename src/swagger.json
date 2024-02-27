@@ -3,7 +3,7 @@
   "info": {
     "title": "API PDV",
     "description": "Api de controle de ponto de venda",
-    "version": "1.8.5"
+    "version": "1.9.5"
   },
   "servers": [
     {
@@ -23,7 +23,17 @@
     "/users": {
       "get": {
         "summary": "Exibir todos os users",
-        "tags": ["user"]
+        "tags": ["user"],
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/user/:id": {
@@ -62,6 +72,9 @@
                   },
                   "password": {
                     "type": "string min 8 length"
+                  },
+                  "isAdmin": {
+                    "type": "boolean"
                   }
                 }
               }
@@ -98,6 +111,16 @@
         "summary": "editar usuário",
         "description": "Rota para editar dados do usuário",
         "tags": ["user"],
+        "parameters": [
+          {
+            "name": "id do usuário admin",
+            "in": "user-id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -114,6 +137,12 @@
                   },
                   "password": {
                     "type": "string min 8 length"
+                  }, 
+                  "isAdmin": {
+                    "type": "boolean"
+                  },
+                  "activated": {
+                    "type": "boolean"
                   }
                 }
               }
@@ -125,7 +154,17 @@
     "/delete/:id": {
       "delete": {
         "summary": "Deletar um usuário",
-        "tags": ["user"]
+        "tags": ["user"],
+        "parameters": [
+          {
+            "name": "id do usuário admin",
+            "in": "user-id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/products": {

@@ -1,6 +1,6 @@
 import express from 'express'
 import z, { ZodError } from 'zod'
-import { checkEmail, checkId, checkUser, createUser, deleteUser, getUsers, updateUser} from '../controllers/user-controller'
+import { checkEmail, checkId, checkUser, createUser, deleteUser, getUsers, updateUser, userStatus} from '../controllers/user-controller'
 const userRoutes = express.Router()
 import { v4 as uuidv4 } from 'uuid'
 import jwt, { Secret } from 'jsonwebtoken'
@@ -8,12 +8,15 @@ import '../../config/dotenv.config';
 import { verifyToken } from '../middlewares/authMiddleware'
 import { hash } from 'bcrypt'
 import { randomInt } from 'node:crypto'
+import { checkAdmin } from '../middlewares/adminMiddleware'
 
 const userSchema = z.object({
   name: z.string(),
   lastname: z.string(),
   email: z.string().email(),
-  password: z.string().min(8)
+  password: z.string().min(8),
+  isAdmin: z.boolean(),
+  activated: z.boolean().optional()
 })
  
 userRoutes.get('/users', verifyToken, async (request, response) => {
@@ -50,9 +53,15 @@ userRoutes.post('/login', async (request, response) => {
 
       const user = await checkUser(email, password)
 
+      const responseUserStatus = await userStatus(email)
+
       
       if (!user) {
         return response.status(404).json({error: "Usuário não encontrado"})
+      }
+
+      if(!responseUserStatus) {
+        return response.status(400).json({error: "Usuário desativado"})
       }
 
       const token = jwt.sign({email}, secretKey as Secret)
@@ -72,7 +81,7 @@ userRoutes.post('/register', async (request, response) => {
   try {
     const id = uuidv4()
 
-    const { name, lastname, email, password } = userSchema.parse(request.body)
+    const { name, lastname, email, password, isAdmin } = userSchema.parse(request.body)
 
     const toCheck = await checkEmail(email)
     
@@ -88,7 +97,9 @@ userRoutes.post('/register', async (request, response) => {
         name,
         lastname,
         email,
-        password: passwordHash
+        password: passwordHash,
+        isAdmin,
+        online: true
       }
       createUser(data)
     }
@@ -103,11 +114,11 @@ userRoutes.post('/register', async (request, response) => {
   }
 })
 
-userRoutes.put('/edit/:id', async (request, response) => {
+userRoutes.put('/edit/:id', checkAdmin, async (request, response) => {
   try {
    const id = request.params.id
 
-   const { name, lastname, email, password } = userSchema.parse(request.body)
+   const { name, lastname, email, password, isAdmin, activated } = userSchema.parse(request.body)
 
    const idExist = await checkId(id)
 
@@ -120,7 +131,9 @@ userRoutes.put('/edit/:id', async (request, response) => {
         name,
         lastname,
         email,
-        password: passwordHash
+        password: passwordHash,
+        isAdmin,
+        activated,
       }
 
       await updateUser(data)
@@ -139,7 +152,7 @@ userRoutes.put('/edit/:id', async (request, response) => {
  }
 })
 
-userRoutes.delete('/delete/:id', async (request, response) => {
+userRoutes.delete('/delete/:id', checkAdmin, async (request, response) => {
   try {
     const id = request.params.id
   
