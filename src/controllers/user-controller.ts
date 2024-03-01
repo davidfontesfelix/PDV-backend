@@ -56,7 +56,6 @@ const checkUser = async (email: string, password: string) => {
   const usersCollectionId = doc(db, 'users', idRef)
   updateDoc(usersCollectionId, {
     ...user,
-    online: true
   })
 
 

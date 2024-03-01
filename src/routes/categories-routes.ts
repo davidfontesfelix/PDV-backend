@@ -3,6 +3,7 @@ import {checkNameExists, createCategory, deleteCategory, getALlCategories, updat
 import { ZodError, z } from 'zod'
 const categoriesRoutes = express.Router()
 import { v4 as uuidv4} from 'uuid'
+import { verifyToken } from '../middlewares/authMiddleware'
 
 const CategorySchema = z.object({
   name: z.string(),
@@ -19,7 +20,7 @@ categoriesRoutes.get("/categories", async (request, response) => {
   }
 
 })
-categoriesRoutes.post("/categories/register", async (request, response) => {
+categoriesRoutes.post("/categories/register", verifyToken, async (request, response) => {
   try {
     const {name, description} = CategorySchema.parse(request.body)
 
@@ -40,7 +41,7 @@ categoriesRoutes.post("/categories/register", async (request, response) => {
     }
   }
 })
-categoriesRoutes.put("/categories/edit/:id", async (request, response) => {
+categoriesRoutes.put("/categories/edit/:id", verifyToken, async (request, response) => {
   try {
     const id = request.params.id
     const {name, description} = CategorySchema.parse(request.body)
@@ -61,7 +62,7 @@ categoriesRoutes.put("/categories/edit/:id", async (request, response) => {
     }
   }
 })
-categoriesRoutes.delete("/categories/delete/:id", async (request, response) => {
+categoriesRoutes.delete("/categories/delete/:id", verifyToken, async (request, response) => {
   try {
     const id = request.params.id
 

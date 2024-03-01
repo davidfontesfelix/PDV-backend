@@ -3,7 +3,7 @@
   "info": {
     "title": "API PDV",
     "description": "Api de controle de ponto de venda",
-    "version": "1.9.5"
+    "version": "1.10.5"
   },
   "servers": [
     {
@@ -106,15 +106,15 @@
         }
       }
     },
-    "/edit/:id": {
+    "/edit": {
       "put": {
         "summary": "editar usuário",
         "description": "Rota para editar dados do usuário",
         "tags": ["user"],
         "parameters": [
           {
-            "name": "id do usuário admin",
-            "in": "user-id",
+            "name": "Bearer Token",
+            "in": "Authorization",
             "required": true,
             "schema": {
               "type": "string"
@@ -126,6 +126,9 @@
             "application/json": {
               "schema": {
                 "properties": {
+                  "id": {
+                    "type": "string"
+                  },
                   "name": {
                     "type": "string"
                   },
@@ -157,8 +160,8 @@
         "tags": ["user"],
         "parameters": [
           {
-            "name": "id do usuário admin",
-            "in": "user-id",
+            "name": "Bearer Token",
+            "in": "Authorization",
             "required": true,
             "schema": {
               "type": "string"
@@ -183,6 +186,16 @@
       "post": {
         "summary": "Criar produto",
         "tags": ["product"],
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -214,6 +227,16 @@
       "put": {
         "summary": "Editar produto",
         "tags": ["product"],
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -241,7 +264,17 @@
     "/products/delete/:code": {
       "delete": {
         "summary": "Deletar um produto",
-        "tags": ["product"]
+        "tags": ["product"],
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/categories": {
@@ -254,6 +287,16 @@
       "post": {
         "summary": "Criar categoria",
         "tags": ["category"],
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -276,6 +319,16 @@
       "put": {
         "summary": "Editar categoria",
         "tags": ["category"],
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -297,7 +350,17 @@
     "/categories/delete/:id": {
       "delete": {
         "summary": "Deletar uma categoria",
-        "tags": ["category"]
+        "tags": ["category"],
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/sales/today": {
@@ -310,6 +373,16 @@
       "post": {
         "summary": "Registrar uma venda",
         "tags": ["sales"],
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
@@ -334,7 +407,17 @@
     "/sales/delete/id": {
       "delete": {
         "summary": "Deletar uma venda por id",
-        "tags": ["sales"]
+        "tags": ["sales"],
+        "parameters": [
+          {
+            "name": "Bearer Token",
+            "in": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     },
     "/dashboard/today": {

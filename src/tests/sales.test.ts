@@ -14,8 +14,8 @@ describe('POST /sales/create', () => {
     const newSalesInvalid = {charge: 'invalid', paid: 20, paymentMethod: 'dinheiro'}
     const response = await request(app).post('/sales/create').send(newSalesInvalid) 
 
-    expect(response.status).toBe(400)
-    expect(response.body).toEqual({ error: 'Erro de validação dos dados' })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual({ error: 'Token não fornecido' })
   })
 })
 
@@ -23,7 +23,7 @@ describe('DELETE /sales/delete/:id', () => {
   it('should return the error: "Id não encontrado"', async () => {
     const response = await request(app).delete('/sales/delete/testid')
 
-    expect(response.status).toBe(404)
-    expect(response.body).toEqual({ error: 'Id não encontrado'})
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual({ error: 'Token não fornecido' })
   })
 })

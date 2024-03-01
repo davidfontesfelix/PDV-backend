@@ -2,6 +2,7 @@ import express from 'express'
 import { ZodError, z } from 'zod'
 import { createSale, deleteSale, getAllSalesDay} from '../controllers/sales-controller'
 import { collectionSize } from '../utils/collection-size'
+import { verifyToken } from '../middlewares/authMiddleware'
 const salesRoutes = express.Router()
 
 const SalesSchema = z.object({
@@ -15,7 +16,7 @@ salesRoutes.get("/sales/today", async (request, response) => {
   response.status(200).json(salesList)
 })
 
-salesRoutes.post("/sales/create", async (request, response) => {
+salesRoutes.post("/sales/create", verifyToken, async (request, response) => {
   try {
     const {charge, paid, paymentMethod} = SalesSchema.parse(request.body)
     const timestamp = new Date()
@@ -35,7 +36,7 @@ salesRoutes.post("/sales/create", async (request, response) => {
   }
 })
 
-salesRoutes.delete('/sales/delete/:id', async (request, response) => {
+salesRoutes.delete('/sales/delete/:id', verifyToken, async (request, response) => {
   try {
     const id = request.params.id
     const deleteResponse = await deleteSale(parseInt(id))

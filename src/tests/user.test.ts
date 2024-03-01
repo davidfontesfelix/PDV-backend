@@ -39,20 +39,20 @@ describe('POST /register', () => {
   })
 })
 
-describe('PUT /edit/:id', () => {
+describe('PUT /edit', () => {
   it('should return the error "Id não foi encontrado"', async () => {
+    const response = await request(app).put('/edit').send({name: 'teste', lastname: 'jest', email:'emailvalido@gmail.com', password: 'teste1234'})
 
-    const response = await request(app).put('/edit/idtest').send({name: 'teste', lastname: 'jest', email:'emailvalido@gmail.com', password: 'teste1234'})
-
-    expect(response.status).toBe(403)
-    expect(response.body).toEqual({ error: 'Acesso negado. Id não encontrado' })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual({ error: 'Token não fornecido' })
   })
 })
 
 describe('DELETE /delete/:id', () => {
   it('should return the error "Id não foi encontrado"', async () => {
     const response = await request(app).delete('/delete/idtest')
-    expect(response.status).toBe(403)
-    expect(response.body).toEqual({ error: 'Acesso negado. Id não encontrado' })
+
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual({ error: 'Token não fornecido' })
   })
 })

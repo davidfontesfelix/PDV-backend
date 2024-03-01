@@ -14,8 +14,8 @@ describe('POST /categories/register', () => {
   it('should return the error: "Erro de validação dos dados"', async () => {
     const response = await request(app).post('/categories/register').send({name: 3, description: "teste" })
 
-    expect(response.status).toBe(400)
-    expect(response.body).toEqual({error: 'Erro de validação dos dados'})
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual({ error: 'Token não fornecido' })
   })
 })
 
@@ -24,8 +24,8 @@ describe('PUT /categories/edit/:id', () => {
     const newData = {name: 'teste', description: 'jest'}
     const response = await request(app).put('/categories/edit/testeid').send(newData)
 
-    expect(response.status).toBe(404)
-    expect(response.body).toEqual({ error: 'Id não encontrado'})
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual({ error: 'Token não fornecido' })
   })
 })
 
@@ -33,7 +33,7 @@ describe('DELETE /categories/delete/:id', () => {
   it('should return the error: "Id não foi encontrado"', async () => {
     const response = await request(app).delete('/categories/delete/testid')
 
-    expect(response.status).toBe(404)
-    expect(response.body).toEqual({ error: 'Id não encontrado' })
+    expect(response.status).toBe(401)
+    expect(response.body).toEqual({ error: 'Token não fornecido' })
   })
 })

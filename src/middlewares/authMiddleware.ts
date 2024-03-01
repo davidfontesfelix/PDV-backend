@@ -3,13 +3,11 @@ import jwt, { Secret } from 'jsonwebtoken'
 
 const secretKey = process.env.SECRET_KEY
 
-interface DecodedToken {
-  email: string;
-}
-
 interface RequestWithUsername extends Request {
   email?: string;
 }
+
+
 
 export function verifyToken(request: RequestWithUsername, response: Response, next: NextFunction) {
   const authHeader = request.headers['authorization']
@@ -19,13 +17,13 @@ export function verifyToken(request: RequestWithUsername, response: Response, ne
     return response.status(401).json({ error: 'Token não fornecido'});
   }
 
-  jwt.verify(token, secretKey as Secret, (err, decoded) => {
+  jwt.verify(token, secretKey as Secret, (err) => {
     if (err) {
       return response.status(403).json({ error: 'Token inválido' })
-    }
+    } else {
 
-    request.email = (decoded as DecodedToken).email
-    next()
+      next()
+    }
   })
 
 }

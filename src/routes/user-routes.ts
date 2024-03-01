@@ -11,6 +11,7 @@ import { randomInt } from 'node:crypto'
 import { checkAdmin } from '../middlewares/adminMiddleware'
 
 const userSchema = z.object({
+  id: z.string(),
   name: z.string(),
   lastname: z.string(),
   email: z.string().email(),
@@ -59,12 +60,12 @@ userRoutes.post('/login', async (request, response) => {
       if (!user) {
         return response.status(404).json({error: "Usuário não encontrado"})
       }
-
+      
       if(!responseUserStatus) {
         return response.status(400).json({error: "Usuário desativado"})
       }
 
-      const token = jwt.sign({email}, secretKey as Secret)
+      const token = jwt.sign({email, user}, secretKey as Secret)
       return response.status(200).json({ message: 'Usuário autenticado com sucesso', token, user, })
       
 
@@ -99,7 +100,7 @@ userRoutes.post('/register', async (request, response) => {
         email,
         password: passwordHash,
         isAdmin,
-        online: true
+        activated: true
       }
       createUser(data)
     }
@@ -114,11 +115,9 @@ userRoutes.post('/register', async (request, response) => {
   }
 })
 
-userRoutes.put('/edit/:id', checkAdmin, async (request, response) => {
+userRoutes.put('/edit', checkAdmin, async (request, response) => {
   try {
-   const id = request.params.id
-
-   const { name, lastname, email, password, isAdmin, activated } = userSchema.parse(request.body)
+   const { id, name, lastname, email, password, isAdmin, activated } = userSchema.parse(request.body)
 
    const idExist = await checkId(id)
 
@@ -141,8 +140,6 @@ userRoutes.put('/edit/:id', checkAdmin, async (request, response) => {
       return response.status(200).json({message: "Editado com sucesso"})
     }
     
-   return response.status(404).json({error: 'Id não foi encontrado'})
-
  } catch (error) {
    if (error instanceof ZodError) {
      response.status(400).json({ error: 'Erro de validação dos dados' })

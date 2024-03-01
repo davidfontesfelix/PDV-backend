@@ -1,6 +1,7 @@
 import express from "express";
 import { checkCode, createProduct, deleteProduct, getAllProducts, getProductByCode, updateAmount, updateProduct } from "../controllers/product-controller";
 import { ZodError, z } from "zod";
+import { verifyToken } from "../middlewares/authMiddleware";
 const productRoutes = express.Router()
 
 const ProductParams = z.object({
@@ -49,7 +50,7 @@ productRoutes.get("/products/:code", async (request, response) => {
   }
 })
 
-productRoutes.post("/products/register", async (request, response) => {
+productRoutes.post("/products/register", verifyToken, async (request, response) => {
   try {
     const {code, name, category, price, amount} = ProductParams.parse(request.body)
 
@@ -71,7 +72,7 @@ productRoutes.post("/products/register", async (request, response) => {
   }
 })
 
-productRoutes.put("/products/edit/:code", async (request, response) => {
+productRoutes.put("/products/edit/:code", verifyToken, async (request, response) => {
   try {
     const paramSchema = z.object({
       code: z.string().min(12)
@@ -100,7 +101,7 @@ productRoutes.put("/products/edit/:code", async (request, response) => {
 
 })
 
-productRoutes.delete("/products/delete/:code", async (request, response) => {
+productRoutes.delete("/products/delete/:code", verifyToken, async (request, response) => {
   try {
     const paramSchema = z.object({
       code: z.string().min(12)

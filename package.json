@@ -1,6 +1,6 @@
 {
   "name": "pdv-backend",
-  "version": "1.9.5",
+  "version": "1.10.5",
   "description": "Uma api de pdv",
   "main": "src/app.ts",
   "scripts": {
